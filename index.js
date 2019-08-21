@@ -16,6 +16,12 @@ const {
 module.exports = new MayanLogger(MayanLoggerOptions.fromEnv(process.env));
 
 /**
+ * Include default logger in export
+ * @type {MayanLogger}
+ */
+module.exports.logger = module.exports;
+
+/**
  * Default log collector for default logger. For quick satisfaction, you can just do require('mayan-logger').log.info('test');
  * @type {MayanLogCollector}
  */
