@@ -4,11 +4,11 @@ Logger for use in xcalibra or related projects.
 
 ### Quick start
 
-```
+```bash
 npm install --save mayan-logger
 ```
 
-```
+```javascript
 const { log } = require('mayan-logger');
 
 log.info('Some message');
@@ -16,7 +16,7 @@ log.info('Some message');
 
 ### A bit more elaborate
 
-```
+```javascript
 const logger = require('mayan-logger');
 
 const log = logger.for('service1');
@@ -30,7 +30,7 @@ log.error(new Error('Something happened!'));
 
 ### Real-ish app usage
 
-```
+```javascript
 const { Logger, LOG_LEVELS, LOGGER_OUTPUTS } = require('mayan-logger');
 
 function UserManager(logger) {
