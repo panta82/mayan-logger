@@ -239,8 +239,9 @@ function MayanLogger(options) {
   this.getState = () => {
     return new MayanLoggerState({
       enabled: _enabled,
-      tracing_enabled: !!(options.tracing && options.tracing.enabled),
       level: _level,
+      timestamps: !!_makeTimestamp(),
+      tracing_enabled: !!(options.tracing && options.tracing.enabled),
       collectors: Object.values(_collectors).map(c => c.state),
     });
   };
@@ -248,7 +249,7 @@ function MayanLogger(options) {
   /**
    * Change general logger level
    * @param newLevel
-   * @return {MayanLoggerState}
+   * @return {MayanLogger}
    */
   this.setLevel = newLevel => {
     if (!LOG_LEVELS[newLevel]) {
@@ -256,30 +257,33 @@ function MayanLogger(options) {
     }
 
     _level = newLevel;
-
-    return this.getState();
+    return this;
   };
 
   /**
    * Change enabled state
+   * @return {MayanLogger}
    */
   this.setEnabled = enabled => {
     _enabled = enabled;
+    return this;
   };
 
   /**
    * Change timestamp option
    * @type {function():Date | boolean | null}
+   * @return {MayanLogger}
    */
   this.setTimestamp = timestamp => {
     _makeTimestamp = makeTimestampMaker(timestamp);
+    return this;
   };
 
   /**
    * Change level of an individual collector
    * @param key
    * @param newLevel
-   * @return {MayanLoggerState}
+   * @return {MayanLogger}
    */
   this.setCollectorLevel = (key, newLevel) => {
     if (newLevel && !LOG_LEVELS[newLevel]) {
@@ -290,9 +294,9 @@ function MayanLogger(options) {
     if (!collector) {
       throw new MayanLoggerError(`Invalid collector key: ${key}`, 400);
     }
-    collector.state.level = newLevel;
 
-    return this.getState();
+    collector.state.level = newLevel;
+    return this;
   };
 }
 

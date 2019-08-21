@@ -214,6 +214,12 @@ class MayanLoggerState {
     this.level = undefined;
 
     /**
+     * Whether timestamps are generated
+     * @type {boolean}
+     */
+    this.timestamps = undefined;
+
+    /**
      * All registered collectors
      * @type {MayanLogCollectorState[]}
      */
