@@ -5,14 +5,14 @@ const {
   LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
   MayanLoggerOptions,
-  MayanLogCollector,
   MayanLogCollectorState,
   MayanLoggerMessage,
-  LoggerState,
+  MayanLoggerState,
   MayanLoggerError,
   InvalidLogLevelError,
 } = require('./types');
 const { inspectCompact, isFunction } = require('./utils');
+const { MayanLogCollector } = require('./collector');
 const { makeConsoleWriter } = require('./writers');
 const { formatAsJSON, formatForTerminal } = require('./formats');
 
@@ -190,10 +190,6 @@ function MayanLogger(options) {
 
   this._makeTracingWrapper = (collector, name, fn) => {
     return function tracingWrapper() {
-      if (!thisLogger._shouldLog(collector, options.tracing.level)) {
-        return;
-      }
-
       if (fn.name) {
         name = fn.name;
       }
@@ -247,10 +243,10 @@ function MayanLogger(options) {
   // *******************************************************************************************************************
 
   /**
-   * @return {LoggerState}
+   * @return {MayanLoggerState}
    */
   this.getState = () => {
-    return new LoggerState({
+    return new MayanLoggerState({
       enabled: _enabled,
       tracing_enabled: !!(options.tracing && options.tracing.enabled),
       level: _level,
@@ -261,7 +257,7 @@ function MayanLogger(options) {
   /**
    * Change general logger level
    * @param newLevel
-   * @return {LoggerState}
+   * @return {MayanLoggerState}
    */
   this.setLevel = newLevel => {
     if (!LOG_LEVELS[newLevel]) {
@@ -284,7 +280,7 @@ function MayanLogger(options) {
    * Change level of an individual collector
    * @param key
    * @param newLevel
-   * @return {LoggerState}
+   * @return {MayanLoggerState}
    */
   this.setCollectorLevel = (key, newLevel) => {
     if (newLevel && !LOG_LEVELS[newLevel]) {
