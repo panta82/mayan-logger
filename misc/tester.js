@@ -1,4 +1,4 @@
-const log = require('../index');
+const logger = require('../index');
 
 /**
  * @param {MayanLogCollector} log
@@ -12,16 +12,16 @@ function tryItOut(log) {
   log.error('Error !', new Error('some message'));
 }
 
-tryItOut(log);
+tryItOut(logger.log);
 
 tryItOut(
-  new log.Logger({
+  new logger.Logger({
     level: 'trace',
   }).for('')
 );
 
 tryItOut(
-  new log.Logger({
+  new logger.Logger({
     level: 'trace',
     output: 'json',
   }).for(['Service', 'Worker'])

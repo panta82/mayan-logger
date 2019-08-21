@@ -10,14 +10,20 @@ const {
 } = require('./src/types');
 
 /**
- * Default log collector for default logger. If you only need to log something without much ceremony.
- * @type {MayanLogCollector}
+ * Default logger, with a few basic options loaded from env
+ * @type {MayanLogger}
  */
 module.exports = new MayanLogger({
   enabled: true,
   level: process.env[LOG_LEVEL_ENV],
   output: process.env.NODE_ENV === 'production' ? LOGGER_OUTPUTS.json : LOGGER_OUTPUTS.terminal,
-}).for();
+});
+
+/**
+ * Default log collector for default logger. For quick satisfaction, you can just do require('mayan-logger').log.info('test');
+ * @type {MayanLogCollector}
+ */
+module.exports.log = module.exports.for();
 
 module.exports.LOG_LEVEL_ENV = LOG_LEVEL_ENV;
 module.exports.LOG_LEVELS = LOG_LEVELS;
