@@ -131,7 +131,7 @@ function MayanLogger(options) {
       message,
       error,
       args,
-      options.date_provider()
+      options.timestamp ? options.timestamp() : null
     );
 
     if (options.on_log) {

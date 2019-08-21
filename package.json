@@ -1,6 +1,6 @@
 {
   "name": "@mayan/logger",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Logger for use with xcalibra and related projects",
   "main": "index.js",
   "keywords": [],

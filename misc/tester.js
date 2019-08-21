@@ -7,7 +7,9 @@ function tryItOut(log) {
   log.trace('Tracing...');
   log.debug('Debugging now');
   log.verbose('With increased verbosity');
-  log.info('Just an ordinary logger');
+  for (let i = 0; i < 10; i++) {
+    log.info('just some info'.repeat(i));
+  }
   log.warn('Warn warn!');
   log.error('Error !', new Error('some message'));
 }
@@ -25,4 +27,11 @@ tryItOut(
     level: 'trace',
     output: 'json',
   }).for(['Service', 'Worker'])
+);
+
+tryItOut(
+  new logger.Logger({
+    level: 'debug',
+    timestamp: false,
+  }).for('Service')
 );

@@ -60,10 +60,10 @@ class MayanLoggerOptions {
     this.collector_levels = {};
 
     /**
-     * Function that will provide current date. Might want to override in testing scenarios.
-     * @type {function():Date}
+     * Function that will provide current date, to be used in messages. Set to empty to disable timestamps.
+     * @type {function():Date | Boolean | null}
      */
-    this.date_provider = () => new Date();
+    this.timestamp = () => new Date();
 
     /**
      * Optional custom log listener, which will be called in addition to normal logging.
@@ -113,9 +113,6 @@ class MayanLoggerOptions {
     }
     if (!LOGGER_OUTPUTS[this.output]) {
       throw new MayanLoggerError(`Invalid logger output: ${this.output}`);
-    }
-    if (!this.date_provider) {
-      throw new MayanLoggerError(`"date_provider" can't be empty`);
     }
   }
 }

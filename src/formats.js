@@ -14,15 +14,21 @@ const LOG_LEVEL_COLORS = {
 };
 assertKeysMatch(LOG_LEVEL_COLORS, LOG_LEVELS);
 
+// Pad all level strings by this much, so things will align
+const levelPadding = Object.keys(LOG_LEVELS).reduce((max, level) => Math.max(max, level.length), 0);
+
 /**
  * Format info into a string suitable for writing to terminal
  * @param {MayanLoggerMessage} msg
  */
 function formatForTerminal(msg) {
-  const parts = [
-    chalk.gray(msg.timestamp.toISOString()),
-    LOG_LEVEL_COLORS[msg.level](msg.level) + ':',
-  ];
+  const parts = [];
+  if (msg.timestamp) {
+    parts.push(chalk.gray(msg.timestamp.toISOString()));
+  }
+
+  parts.push(LOG_LEVEL_COLORS[msg.level](msg.level.padStart(levelPadding) + ':'));
+
   if (msg.collector.tagString) {
     parts.push(chalk.white(msg.collector.tagString));
   }
