@@ -4,12 +4,12 @@ const {
   LOG_LEVELS,
   LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
-  LoggerOptions,
-  LogCollector,
-  LogCollectorState,
-  LoggerMessage,
+  MayanLoggerOptions,
+  MayanLogCollector,
+  MayanLogCollectorState,
+  MayanLoggerMessage,
   LoggerState,
-  LoggerError,
+  MayanLoggerError,
   InvalidLogLevelError,
 } = require('./types');
 const { inspectCompact, isFunction } = require('./utils');
@@ -18,13 +18,13 @@ const { formatAsJSON, formatForTerminal } = require('./formats');
 
 /**
  * Master logger coordinator. Can create log interfaces for individual services, attach tracing...
- * @param {LoggerOptions} options
+ * @param {MayanLoggerOptions} options
  */
-function Logger(options) {
+function MayanLogger(options) {
   const thisLogger = this;
 
-  if (!(options instanceof LoggerOptions)) {
-    options = new LoggerOptions(options);
+  if (!(options instanceof MayanLoggerOptions)) {
+    options = new MayanLoggerOptions(options);
   }
 
   /**
@@ -49,13 +49,13 @@ function Logger(options) {
 
   /**
    * All registered collectors
-   * @type {Object.<string, LogCollectorState>}
+   * @type {Object.<string, MayanLogCollectorState>}
    */
   const _collectors = {};
 
   /**
-   * Formatter will take a LoggerMessage instance and produce a string that can be fed to writer
-   * @type {function(LoggerMessage)}
+   * Formatter will take a MayanLoggerMessage instance and produce a string that can be fed to writer
+   * @type {function(MayanLoggerMessage)}
    */
   this._formatMessage =
     options.output === LOGGER_OUTPUTS.terminal ? formatForTerminal : formatAsJSON;
@@ -68,7 +68,7 @@ function Logger(options) {
 
   /**
    * Returns true if we should log at given level
-   * @param {LogCollectorState} collector Logging collector that is submitting a log
+   * @param {MayanLogCollectorState} collector Logging collector that is submitting a log
    * @param level
    * @returns boolean
    */
@@ -89,7 +89,7 @@ function Logger(options) {
   /**
    * Log message at a certain level and emit it as event. Early exit in case we are currently
    * set at higher level than given message. This is meant to be called internally, by a specific collector.
-   * @param {LogCollectorState} collector Logging collector that is submitting this log
+   * @param {MayanLogCollectorState} collector Logging collector that is submitting this log
    * @param level Level at which this should be logged
    * @param message
    * @param args
@@ -125,7 +125,14 @@ function Logger(options) {
       _loggedErrors.add(error);
     }
 
-    const msg = new LoggerMessage(collector, level, message, error, args, options.date_provider());
+    const msg = new MayanLoggerMessage(
+      collector,
+      level,
+      message,
+      error,
+      args,
+      options.date_provider()
+    );
 
     if (options.on_log) {
       try {
@@ -148,7 +155,7 @@ function Logger(options) {
   /**
    * Create or get a log collector for given tag or list of tags. You need to call this in order to collect logs.
    * @param {string|string[]|function} tags
-   * @return {LogCollector}
+   * @return {MayanLogCollector}
    */
   this.for = (...tags) => {
     tags = tags
@@ -167,13 +174,13 @@ function Logger(options) {
       return _collectors[collectorKey];
     }
 
-    const state = new LogCollectorState({
+    const state = new MayanLogCollectorState({
       key: collectorKey,
       tags,
       level: (options.collector_levels && options.collector_levels[collectorKey]) || undefined,
     });
 
-    const collector = new LogCollector(state, this);
+    const collector = new MayanLogCollector(state, this);
     _collectors[collectorKey] = collector;
 
     return collector;
@@ -206,13 +213,13 @@ function Logger(options) {
   /**
    * Add tracing wrapper around all function properties on an object
    * NOTE: This will mutate the object!
-   * @param {LogCollectorState} collector
+   * @param {MayanLogCollectorState} collector
    * @param {Object} target
    * @param {WeakSet<function>} untracedMethods
    */
   this._addTracing = (collector, target, untracedMethods) => {
     if (!target || !target.hasOwnProperty) {
-      throw new LoggerError(`Tracing target must be an object, given value: ${target}`);
+      throw new MayanLoggerError(`Tracing target must be an object, given value: ${target}`);
     }
 
     if (!this.isTracingEnabled()) {
@@ -286,7 +293,7 @@ function Logger(options) {
 
     const collector = _collectors[key];
     if (!collector) {
-      throw new LoggerError(`Invalid collector key: ${key}`, 400);
+      throw new MayanLoggerError(`Invalid collector key: ${key}`, 400);
     }
     collector.state.level = newLevel;
 
@@ -295,5 +302,5 @@ function Logger(options) {
 }
 
 module.exports = {
-  Logger,
+  MayanLogger,
 };

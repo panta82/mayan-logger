@@ -34,8 +34,8 @@ assertKeysMatch(LOG_LEVEL_VALUES, LOG_LEVELS);
 
 const LOG_LEVEL_VALUES_TO_LEVELS = reverseHash(LOG_LEVEL_VALUES);
 
-class LoggerOptions {
-  constructor(/** LoggerOptions */ source) {
+class MayanLoggerOptions {
+  constructor(/** MayanLoggerOptions */ source) {
     /**
      * Base log level. One of LOG_LEVELS. Alternatively, provide a value from 0 (error) to 5 (trade), or -1 for silence.
      */
@@ -68,7 +68,7 @@ class LoggerOptions {
     /**
      * Optional custom log listener, which will be called in addition to normal logging.
      * You can use this to plug in an external storage or collector (eg. Sentry).
-     * @type{function(LoggerMessage)}
+     * @type{function(MayanLoggerMessage)}
      */
     this.on_log = undefined;
 
@@ -109,7 +109,13 @@ class LoggerOptions {
 
   assert() {
     if (!LOG_LEVELS[this.level]) {
-      throw new LoggerError('Invalid log level: ' + this.level);
+      throw new InvalidLogLevelError(this.level, 500);
+    }
+    if (!LOGGER_OUTPUTS[this.output]) {
+      throw new MayanLoggerError(`Invalid logger output: ${this.output}`);
+    }
+    if (!this.date_provider) {
+      throw new MayanLoggerError(`"date_provider" can't be empty`);
     }
   }
 }
@@ -119,8 +125,8 @@ class LoggerOptions {
 /**
  * Model that presents the state part of a log collector configuration
  */
-class LogCollectorState {
-  constructor(/** LogCollectorState */ source) {
+class MayanLogCollectorState {
+  constructor(/** MayanLogCollectorState */ source) {
     /**
      * Key uniquely identifying this state
      */
@@ -155,13 +161,13 @@ class LogCollectorState {
 
 /**
  * This is used by services to actually collect logs. Each service that wants to use logger should get an
- * instance of LogCollector for itself.
- * @param {LogCollectorState} state
+ * instance of MayanLogCollector for itself.
+ * @param {MayanLogCollectorState} state
  * @param {Logger} logger
  */
-function LogCollector(state, logger) {
+function MayanLogCollector(state, logger) {
   /**
-   * @type {LogCollectorState}
+   * @type {MayanLogCollectorState}
    */
   this.state = state;
 
@@ -267,11 +273,11 @@ function LogCollector(state, logger) {
 /**
  * Data carrier that contains information about logged message
  */
-class LoggerMessage {
+class MayanLoggerMessage {
   constructor(collector, level, message, error, data, timestamp) {
     /**
      * Collector that has submitted message
-     * @type {LogCollectorState}
+     * @type {MayanLogCollectorState}
      */
     this.collector = collector;
 
@@ -294,8 +300,8 @@ class LoggerMessage {
 
 // *********************************************************************************************************************
 
-class LoggerState {
-  constructor(/** LoggerState */ source) {
+class MayanLoggerState {
+  constructor(/** MayanLoggerState */ source) {
     /**
      * Master switch, enabling/disabling logging
      * @type {Boolean}
@@ -316,7 +322,7 @@ class LoggerState {
 
     /**
      * All registered collectors
-     * @type {LogCollectorState[]}
+     * @type {MayanLogCollectorState[]}
      */
     this.collectors = undefined;
 
@@ -326,16 +332,16 @@ class LoggerState {
 
 // *********************************************************************************************************************
 
-class LoggerError extends Error {
+class MayanLoggerError extends Error {
   constructor(message, code = 500) {
     super(message);
     this.code = code;
   }
 }
 
-class InvalidLogLevelError extends Error {
-  constructor(level) {
-    super(`Invalid log level: ${level}`, 400);
+class InvalidLogLevelError extends MayanLoggerError {
+  constructor(level, code = 400) {
+    super(`Invalid log level: ${level}`, code);
   }
 }
 
@@ -348,15 +354,15 @@ module.exports = {
   LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
 
-  LoggerOptions,
+  MayanLoggerOptions,
 
-  LogCollectorState,
-  LogCollector,
+  MayanLogCollectorState,
+  MayanLogCollector,
 
-  LoggerMessage,
+  MayanLoggerMessage,
 
-  LoggerState,
+  MayanLoggerState,
 
-  LoggerError,
+  MayanLoggerError,
   InvalidLogLevelError,
 };

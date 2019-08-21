@@ -1,8 +1,8 @@
 {
-  "name": "xcalibra-logger",
+  "name": "mayan-logger",
   "version": "1.0.0",
-  "description": "",
-  "main": "logger.js",
+  "description": "Logger for use with xcalibra and related projects",
+  "main": "index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",

@@ -16,7 +16,7 @@ assertKeysMatch(LOG_LEVEL_COLORS, LOG_LEVELS);
 
 /**
  * Format info into a string suitable for writing to terminal
- * @param {LoggerMessage} msg
+ * @param {MayanLoggerMessage} msg
  */
 function formatForTerminal(msg) {
   const parts = [
@@ -51,7 +51,7 @@ function formatForTerminal(msg) {
 
 /**
  * Format info into a JSON string
- * @param {LoggerMessage} msg
+ * @param {MayanLoggerMessage} msg
  */
 function formatAsJSON(msg) {
   const payload = { ...msg };
