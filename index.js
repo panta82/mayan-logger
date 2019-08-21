@@ -21,12 +21,6 @@ module.exports = new MayanLogger(MayanLoggerOptions.fromEnv(process.env));
  */
 module.exports.logger = module.exports;
 
-/**
- * Default log collector for default logger. For quick satisfaction, you can just do require('mayan-logger').log.info('test');
- * @type {MayanLogCollector}
- */
-module.exports.log = module.exports.for();
-
 module.exports.LOG_LEVEL_ENV = LOG_LEVEL_ENV;
 module.exports.LOG_LEVELS = LOG_LEVELS;
 module.exports.LOG_LEVEL_VALUES = LOG_LEVEL_VALUES;

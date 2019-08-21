@@ -298,6 +298,12 @@ function MayanLogger(options) {
     collector.state.level = newLevel;
     return this;
   };
+
+  /**
+   * Default collector, without any tags. Can be used with logger.log.info();
+   * @type {MayanLogCollector}
+   */
+  this.log = this.for();
 }
 
 function makeTimestampMaker(timestamp) {
