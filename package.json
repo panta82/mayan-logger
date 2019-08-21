@@ -1,0 +1,9 @@
+{
+  "name": "xcalibra-logger",
+  "version": "1.0.0",
+  "description": "",
+  "main": "logger.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
