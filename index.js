@@ -13,11 +13,7 @@ const {
  * Default logger, with a few basic options loaded from env
  * @type {MayanLogger}
  */
-module.exports = new MayanLogger({
-  enabled: true,
-  level: process.env[LOG_LEVEL_ENV],
-  output: process.env.NODE_ENV === 'production' ? LOGGER_OUTPUTS.json : LOGGER_OUTPUTS.terminal,
-});
+module.exports = new MayanLogger(MayanLoggerOptions.fromEnv(process.env));
 
 /**
  * Default log collector for default logger. For quick satisfaction, you can just do require('mayan-logger').log.info('test');

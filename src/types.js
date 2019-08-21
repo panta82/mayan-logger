@@ -60,10 +60,10 @@ class MayanLoggerOptions {
     this.collector_levels = {};
 
     /**
-     * Function that will provide current date, to be used in messages. Set to empty to disable timestamps.
-     * @type {function():Date | Boolean | null}
+     * Whether to include timestamp in messages. You can also provide your own function to generate dates.
+     * @type {function():Date | boolean | null}
      */
-    this.timestamp = () => new Date();
+    this.timestamp = true;
 
     /**
      * Optional custom log listener, which will be called in addition to normal logging.
@@ -93,27 +93,32 @@ class MayanLoggerOptions {
       tag: 'trace',
     };
 
-    if (source) {
-      Object.assign(this, {
-        ...source,
-        level: LOG_LEVEL_VALUES_TO_LEVELS[source.level] || source.level || this.level,
-        tracing: {
-          ...this.tracing,
-          ...source.tracing,
-        },
-      });
-    }
-
-    this.assert();
+    this.assign(source);
   }
 
-  assert() {
+  assign(source) {
+    Object.assign(this, {
+      ...source,
+      level: LOG_LEVEL_VALUES_TO_LEVELS[source.level] || source.level || this.level,
+      tracing: {
+        ...this.tracing,
+        ...source.tracing,
+      },
+    });
+
     if (!LOG_LEVELS[this.level]) {
       throw new InvalidLogLevelError(this.level, 500);
     }
     if (!LOGGER_OUTPUTS[this.output]) {
       throw new MayanLoggerError(`Invalid logger output: ${this.output}`);
     }
+  }
+
+  static fromEnv(env = {}) {
+    return new this({
+      level: env[LOG_LEVEL_ENV],
+      output: env.NODE_ENV === 'production' ? LOGGER_OUTPUTS.json : LOGGER_OUTPUTS.terminal,
+    });
   }
 }
 

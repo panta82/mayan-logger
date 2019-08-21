@@ -47,6 +47,8 @@ function MayanLogger(options) {
    */
   let _enabled = options.enabled;
 
+  let _makeTimestamp = makeTimestampMaker(options.timestamp);
+
   /**
    * All registered collectors
    * @type {Object.<string, MayanLogCollectorState>}
@@ -79,11 +81,7 @@ function MayanLogger(options) {
 
     const effectiveLevel = collector.level || _level;
 
-    if (LOG_LEVEL_VALUES[level] > LOG_LEVEL_VALUES[effectiveLevel]) {
-      return false;
-    }
-
-    return true;
+    return LOG_LEVEL_VALUES[level] <= LOG_LEVEL_VALUES[effectiveLevel];
   };
 
   /**
@@ -125,14 +123,7 @@ function MayanLogger(options) {
       _loggedErrors.add(error);
     }
 
-    const msg = new MayanLoggerMessage(
-      collector,
-      level,
-      message,
-      error,
-      args,
-      options.timestamp ? options.timestamp() : null
-    );
+    const msg = new MayanLoggerMessage(collector, level, message, error, args, _makeTimestamp());
 
     if (options.on_log) {
       try {
@@ -277,6 +268,14 @@ function MayanLogger(options) {
   };
 
   /**
+   * Change timestamp option
+   * @type {function():Date | boolean | null}
+   */
+  this.setTimestamp = timestamp => {
+    _makeTimestamp = makeTimestampMaker(timestamp);
+  };
+
+  /**
    * Change level of an individual collector
    * @param key
    * @param newLevel
@@ -295,6 +294,10 @@ function MayanLogger(options) {
 
     return this.getState();
   };
+}
+
+function makeTimestampMaker(timestamp) {
+  return timestamp ? (isFunction(timestamp) ? timestamp : () => new Date()) : () => null;
 }
 
 module.exports = {
