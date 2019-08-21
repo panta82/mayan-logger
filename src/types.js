@@ -4,8 +4,6 @@ const { reverseHash, assertKeysMatch } = require('./utils');
 
 const LOG_LEVEL_ENV = 'LOG_LEVEL';
 
-const LOG_EVENT = 'log';
-
 const LOG_LEVELS = {
   silent: 'silent',
   error: 'error',
@@ -62,6 +60,19 @@ class LoggerOptions {
     this.collector_levels = {};
 
     /**
+     * Function that will provide current date. Might want to override in testing scenarios.
+     * @type {function():Date}
+     */
+    this.date_provider = () => new Date();
+
+    /**
+     * Optional custom log listener, which will be called in addition to normal logging.
+     * You can use this to plug in an external storage or collector (eg. Sentry).
+     * @type{function(LoggerMessage)}
+     */
+    this.on_log = undefined;
+
+    /**
      * Tracing will
      */
     this.tracing = {
@@ -85,12 +96,20 @@ class LoggerOptions {
     if (source) {
       Object.assign(this, {
         ...source,
-        level: LOG_LEVEL_VALUES_TO_LEVELS[source.level] || this.level,
+        level: LOG_LEVEL_VALUES_TO_LEVELS[source.level] || source.level || this.level,
         tracing: {
           ...this.tracing,
           ...source.tracing,
         },
       });
+    }
+
+    this.assert();
+  }
+
+  assert() {
+    if (!LOG_LEVELS[this.level]) {
+      throw new LoggerError('Invalid log level: ' + this.level);
     }
   }
 }
@@ -145,6 +164,11 @@ function LogCollector(state, logger) {
    * @type {LogCollectorState}
    */
   this.state = state;
+
+  /**
+   * @type {Logger}
+   */
+  this.logger = logger;
 
   /**
    * If some method is marked as untraced, we will "remember" that here
@@ -319,9 +343,9 @@ class InvalidLogLevelError extends Error {
 
 module.exports = {
   LOG_LEVEL_ENV,
-  LOG_EVENT,
 
   LOG_LEVELS,
+  LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
 
   LoggerOptions,

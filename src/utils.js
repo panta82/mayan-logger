@@ -15,6 +15,14 @@ function reverseHash(hash) {
   return result;
 }
 
+function isFunction(val) {
+  return val && Object.prototype.toString.call(val) === '[object Function]';
+}
+
+function isObject(val) {
+  return val != null && typeof val === 'object';
+}
+
 const INSPECT_COMPACT_OPTIONS = {
   id_properties: ['id', 'name', 'title', 'key', 'index'],
   inspect_options: { depth: 1 },
@@ -38,7 +46,7 @@ function inspectCompact(arg, options = INSPECT_COMPACT_OPTIONS) {
     return arg.toISOString();
   }
 
-  if (lodash.isArray(arg)) {
+  if (Array.isArray(arg)) {
     const members = [];
     let totalLength = 0;
     let i;
@@ -56,7 +64,7 @@ function inspectCompact(arg, options = INSPECT_COMPACT_OPTIONS) {
     return `[${members.join(', ')}${suffix}]`;
   }
 
-  if (lodash.isObject(arg)) {
+  if (isObject(arg)) {
     const props = [];
 
     options.id_properties.forEach(idProp => {
@@ -76,21 +84,17 @@ function inspectCompact(arg, options = INSPECT_COMPACT_OPTIONS) {
     return '{' + name + '}';
   }
 
-  if (lodash.isString(arg) && arg.length >= options.string_cutoff) {
+  if (typeof arg === 'string' && arg.length >= options.string_cutoff) {
     arg = arg.slice(0, options.string_cutoff - 3) + '...';
   }
 
   return libUtil.inspect(arg, options.inspect_options);
 }
 
-function isFunction(val) {
-  return val && Object.prototype.toString.call(val) === '[object Function]';
-}
-
 function assertKeysMatch(hashToCheck, canonicalHash) {
   for (const key in canonicalHash) {
     if (canonicalHash.hasOwnProperty(key)) {
-      assert.ok(hashToCheck[key], 'All required keys must have values');
+      assert.ok(key in hashToCheck, 'All required keys must have values');
     }
   }
 }

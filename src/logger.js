@@ -1,10 +1,11 @@
 'use strict';
 
 const {
-  LOG_EVENT,
   LOG_LEVELS,
+  LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
   LoggerOptions,
+  LogCollector,
   LogCollectorState,
   LoggerMessage,
   LoggerState,
@@ -124,10 +125,20 @@ function Logger(options) {
       _loggedErrors.add(error);
     }
 
-    const msg = new LoggerMessage(collector, level, message, error, args, this._now());
+    const msg = new LoggerMessage(collector, level, message, error, args, options.date_provider());
 
-    // Emit log payload, for others to consume
-    this.emit(LOG_EVENT, msg);
+    if (options.on_log) {
+      try {
+        options.on_log(msg);
+      } catch (err) {
+        console.error(
+          `Unexpected error raised by "on_log" handler.`,
+          err,
+          `\nMessage that caused the error: ${msg}`
+        );
+        throw err;
+      }
+    }
 
     // Write it out
     const txtMessage = this._formatMessage(msg);
