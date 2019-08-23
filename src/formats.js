@@ -1,7 +1,7 @@
 const chalk = require('chalk');
 
 const { assertKeysMatch } = require('./utils');
-const { LOG_LEVELS } = require('./types');
+const { LOG_LEVELS, LOGGER_OUTPUTS, MayanLoggerError } = require('./types');
 
 const LOG_LEVEL_COLORS = {
   silent: str => str,
@@ -19,17 +19,24 @@ const levelPadding = Object.keys(LOG_LEVELS).reduce((max, level) => Math.max(max
 
 /**
  * Format info into a string suitable for writing to terminal
+ * @param {boolean} indentMultiline
  * @param {MayanLoggerMessage} msg
  */
-function formatForTerminal(msg) {
+function formatForTerminal(indentMultiline, msg) {
+  let prefixLength = 0;
   const parts = [];
   if (msg.timestamp) {
-    parts.push(chalk.gray(msg.timestamp.toISOString()));
+    const timestampStr = msg.timestamp.toISOString();
+    parts.push(chalk.gray(timestampStr));
+    prefixLength += timestampStr.length;
   }
 
-  parts.push(LOG_LEVEL_COLORS[msg.level](msg.level.padStart(levelPadding) + ':'));
+  const levelStr = msg.level.padStart(levelPadding) + ':';
+  prefixLength += levelStr.length;
+  parts.push(LOG_LEVEL_COLORS[msg.level](levelStr));
 
   if (msg.collector.tagString) {
+    prefixLength += msg.collector.tagString.length;
     parts.push(chalk.white(msg.collector.tagString));
   }
 
@@ -50,6 +57,12 @@ function formatForTerminal(msg) {
     }
   }
 
+  if (indentMultiline) {
+    // For each part we will add one ' ' delimiter.
+    const indent = ' '.repeat(prefixLength + parts.length);
+    message = message.replace(/(\r\n|\n\r|\r|\n)/gm, '$1' + indent);
+  }
+
   parts.push(message);
 
   return parts.join(' ');
@@ -66,7 +79,24 @@ function formatAsJSON(msg) {
   return JSON.stringify(payload);
 }
 
+/**
+ * @param {MayanLoggerOptions} options
+ */
+function makeFormatter(options) {
+  switch (options.output) {
+    case LOGGER_OUTPUTS.terminal:
+      return formatForTerminal.bind(null, options.indent_multiline);
+    case LOGGER_OUTPUTS.json:
+      return formatAsJSON;
+  }
+
+  throw new MayanLoggerError(
+    `Invalid output "${options.output}". Must be either "${LOGGER_OUTPUTS.terminal}" or "${LOGGER_OUTPUTS.json}"`
+  );
+}
+
 module.exports = {
   formatForTerminal,
   formatAsJSON,
+  makeFormatter,
 };

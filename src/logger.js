@@ -13,8 +13,8 @@ const {
 } = require('./types');
 const { inspectCompact, isFunction } = require('./utils');
 const { MayanLogCollector } = require('./collector');
+const { makeFormatter } = require('./formats');
 const { makeConsoleWriter } = require('./writers');
-const { formatAsJSON, formatForTerminal } = require('./formats');
 
 /**
  * Master logger coordinator. Can create log interfaces for individual services, attach tracing...
@@ -59,8 +59,7 @@ function MayanLogger(options) {
    * Formatter will take a MayanLoggerMessage instance and produce a string that can be fed to writer
    * @type {function(MayanLoggerMessage)}
    */
-  this._formatMessage =
-    options.output === LOGGER_OUTPUTS.terminal ? formatForTerminal : formatAsJSON;
+  this._formatMessage = makeFormatter(options);
 
   /**
    * Writer will actually write the message to stdout or stderr

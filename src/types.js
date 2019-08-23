@@ -38,6 +38,7 @@ class MayanLoggerOptions {
   constructor(/** MayanLoggerOptions */ source) {
     /**
      * Base log level. One of LOG_LEVELS. Alternatively, provide a value from 0 (error) to 5 (trade), or -1 for silence.
+     * @type {string}
      */
     this.level = LOG_LEVELS.info;
 
@@ -49,6 +50,7 @@ class MayanLoggerOptions {
 
     /**
      * One of LOGGER_OUTPUTS. Determined what will logger spew out.
+     * @type {string}
      */
     this.output = LOGGER_OUTPUTS.terminal;
 
@@ -66,6 +68,12 @@ class MayanLoggerOptions {
     this.timestamp = true;
 
     /**
+     * Indent multiline logs. Only applies when logging to terminal.
+     * @type {boolean}
+     */
+    this.indent_multiline = true;
+
+    /**
      * Optional custom log listener, which will be called in addition to normal logging.
      * You can use this to plug in an external storage or collector (eg. Sentry).
      * @type{function(MayanLoggerMessage)}
@@ -73,7 +81,7 @@ class MayanLoggerOptions {
     this.on_log = undefined;
 
     /**
-     * Tracing will
+     * Tracing will automatically attach log statements around functions, AOP style.
      */
     this.tracing = {
       /**
