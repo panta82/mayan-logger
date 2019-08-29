@@ -74,8 +74,25 @@ function formatForTerminal(indentMultiline, msg) {
  */
 function formatAsJSON(msg) {
   const payload = { ...msg };
+
   payload.tags = msg.collector.tags;
   delete payload.collector;
+
+  if (payload.error) {
+    if (!(Object.getOwnPropertyDescriptor(payload, 'stack') || {}).enumerable) {
+      // This error object doesn't contain enumerable properties which will show up in JSON. Fix that.
+      const err = payload.error;
+      payload.error = { ...err };
+      payload.error.message = err.message;
+      payload.error.stack = err.stack;
+    }
+
+    // Transplant error message to payload message
+    if (!payload.message) {
+      payload.message = payload.error.message || payload.error;
+    }
+  }
+
   return JSON.stringify(payload);
 }
 

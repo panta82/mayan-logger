@@ -1,22 +1,22 @@
 {
-  "name": "@mayan/logger",
-  "version": "1.2.0",
-  "description": "Logger for use with xcalibra and related projects",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-	"repository": {
-		"type": "git",
-		"url": "git@git.mayan.icu:mayan/logger.git"
-	},
-  "devDependencies": {
-    "prettier": "^1.18.2"
-  },
-  "dependencies": {
-    "chalk": "^2.4.2"
-  },
-	"publishConfig": {
-		"registry": "https://npm.mayan.icu"
-	}
+ "name": "@mayan/logger",
+ "version": "1.2.0",
+ "description": "Logger for use with xcalibra and related projects",
+ "main": "index.js",
+ "keywords": [],
+ "author": "",
+ "license": "ISC",
+ "repository": {
+  "type": "git",
+  "url": "git@git.mayan.icu:mayan/logger.git"
+ },
+ "devDependencies": {
+  "prettier": "^1.18.2"
+ },
+ "dependencies": {
+  "chalk": "^2.4.2"
+ },
+ "publishConfig": {
+  "registry": "https://npm.mayan.icu"
+ }
 }
