@@ -1,6 +1,6 @@
 'use strict';
 
-const { Logger, LOG_LEVELS, LOGGER_OUTPUTS } = require('../index');
+const { MayanLogger, LOG_LEVELS, LOGGER_OUTPUTS } = require('../index');
 
 function UserManager(logger) {
   const log = logger.for(UserManager);
@@ -14,7 +14,7 @@ function UserManager(logger) {
   log.addTracing(this);
 }
 
-const logger = new Logger({
+const logger = new MayanLogger({
   level: LOG_LEVELS.verbose,
   output: LOGGER_OUTPUTS.terminal,
   tracing: {

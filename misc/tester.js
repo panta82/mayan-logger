@@ -19,20 +19,20 @@ function tryItOut(log) {
 tryItOut(logger.log);
 
 tryItOut(
-  new logger.Logger({
+  new logger.MayanLogger({
     level: 'trace',
   }).for('')
 );
 
 tryItOut(
-  new logger.Logger({
+  new logger.MayanLogger({
     level: 'trace',
     output: 'json',
   }).for(['Service', 'Worker'])
 );
 
 tryItOut(
-  new logger.Logger({
+  new logger.MayanLogger({
     level: 'debug',
     timestamp: false,
   }).for('Service')

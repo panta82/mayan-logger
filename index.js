@@ -34,10 +34,10 @@ module.exports.LOG_LEVELS = LOG_LEVELS;
 module.exports.LOG_LEVEL_VALUES = LOG_LEVEL_VALUES;
 module.exports.LOGGER_OUTPUTS = LOGGER_OUTPUTS;
 
-module.exports.Logger = MayanLogger;
-module.exports.LoggerOptions = MayanLoggerOptions;
-module.exports.LoggerState = MayanLoggerState;
-module.exports.LogCollectorState = MayanLogCollectorState;
+module.exports.MayanLogger = MayanLogger;
+module.exports.MayanLoggerOptions = MayanLoggerOptions;
+module.exports.MayanLoggerState = MayanLoggerState;
+module.exports.MayanLogCollectorState = MayanLogCollectorState;
 
 /**
  * Null logger, which will never output anything, but has the normal logger API
