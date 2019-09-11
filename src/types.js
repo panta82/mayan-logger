@@ -177,7 +177,7 @@ class MayanLogCollectorState {
  * Data carrier that contains information about logged message
  */
 class MayanLoggerMessage {
-  constructor(collector, level, message, error, data, timestamp) {
+  constructor(collector, level, message, error, data, timestamp, isTrace) {
     /**
      * Collector that has submitted message
      * @type {MayanLogCollectorState}
@@ -198,6 +198,9 @@ class MayanLoggerMessage {
 
     /** @type {Date} */
     this.timestamp = timestamp;
+
+    /** @type {Boolean} */
+    this.is_trace = isTrace;
   }
 }
 

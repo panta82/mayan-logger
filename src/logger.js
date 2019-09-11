@@ -91,6 +91,12 @@ function MayanLogger(options) {
    * @param args
    */
   this._log = function(collector, level, message, ...args) {
+    let isTrace = false;
+    if (level === LOG_LEVELS.trace) {
+      isTrace = true;
+      level = options.tracing.level;
+    }
+
     if (!this._shouldLog(collector, level)) {
       return;
     }
@@ -121,7 +127,15 @@ function MayanLogger(options) {
       _loggedErrors.add(error);
     }
 
-    const msg = new MayanLoggerMessage(collector, level, message, error, args, _makeTimestamp());
+    const msg = new MayanLoggerMessage(
+      collector,
+      level,
+      message,
+      error,
+      args,
+      _makeTimestamp(),
+      isTrace
+    );
 
     if (options.on_log) {
       try {
@@ -184,7 +198,8 @@ function MayanLogger(options) {
       }
       const args = Array.prototype.map.call(arguments, thisLogger._tracingArgToString).join(', ');
       const message = `[TRACE] ${name}(${args})`;
-      thisLogger._log(collector, options.tracing.level, message);
+      // NOTE: Tracing is always done with trace level. It can later be replaced with actual level, based on settings.
+      thisLogger._log(collector, LOG_LEVELS.trace, message);
 
       return fn.apply(this, arguments);
 
@@ -302,6 +317,19 @@ function MayanLogger(options) {
    * @type {MayanLogCollector}
    */
   this.log = this.for();
+
+  /**
+   * A utility for tests and internal purposes
+   */
+  this._getInternals = () => ({
+    options,
+    _collectors,
+    _level,
+    _enabled,
+    _loggedErrors,
+    _tracingTargets,
+    _makeTimestamp,
+  });
 }
 
 function makeTimestampMaker(timestamp) {
