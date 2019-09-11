@@ -1,3 +1,5 @@
+'use strict';
+
 const { LOG_LEVELS } = require('./types');
 
 const LOG_LEVELS_STDERR = {

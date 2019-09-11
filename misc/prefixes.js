@@ -1,3 +1,5 @@
+'use strict';
+
 const logger = require('../index');
 
 logger.log.info('1\n2\n3');

@@ -1,3 +1,5 @@
+'use strict';
+
 const { Logger, LOG_LEVELS, LOGGER_OUTPUTS } = require('../index');
 
 function UserManager(logger) {

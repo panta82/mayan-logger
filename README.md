@@ -70,4 +70,13 @@ Outputs:
 2019-08-21T12:44:10.582Z info: [UserManager] Fetched user 456
 ```
 
-TODO: Real readme, this is 'nuff for now.
+## Ecosystem note
+
+While this logger is part of the "mayan" suite of services, it is not directly connected to `@mayan/base` or any other shared "bedrock" library.
+
+Why is that? Because I want this logger to be used in banker nodes. And bankers might be made by 3rd party developers, contractors, etc. So we might not want to go to trouble to giving them access to our infrastructure.
+
+On the other hand, since bankers will operate within our infrastructure, we want their output to be predictable and follow the same format and conventions as our core team apps (so we can collect and organize logs).
+
+Therefore, this logger is made disconnected from all other internal services. If it ever comes a time we want to have an outsider work on banker, we can easily publish this module to npm.js and stipulate they have to use that for their logging.
+ 

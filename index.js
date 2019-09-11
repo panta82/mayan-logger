@@ -1,3 +1,5 @@
+'use strict';
+
 const { MayanLogger } = require('./src/logger');
 const {
   LOG_LEVEL_ENV,

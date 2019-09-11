@@ -3,7 +3,6 @@
 const {
   LOG_LEVELS,
   LOG_LEVEL_VALUES,
-  LOGGER_OUTPUTS,
   MayanLoggerOptions,
   MayanLogCollectorState,
   MayanLoggerMessage,
