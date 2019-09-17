@@ -14,6 +14,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </DB2CodeStyleSettings>
     <DerbyCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -21,6 +27,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </DerbyCodeStyleSettings>
     <H2CodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -28,6 +40,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </H2CodeStyleSettings>
     <HSQLCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -35,6 +53,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </HSQLCodeStyleSettings>
     <HTMLCodeStyleSettings>
       <option name="HTML_ALIGN_ATTRIBUTES" value="false" />
@@ -55,6 +79,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </MSSQLCodeStyleSettings>
     <MarkdownNavigatorCodeStyleSettings>
       <option name="RIGHT_MARGIN" value="72" />
@@ -65,6 +95,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </MySQLCodeStyleSettings>
     <OracleCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -72,6 +108,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </OracleCodeStyleSettings>
     <PostgresCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -79,6 +121,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </PostgresCodeStyleSettings>
     <SQLiteCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -86,6 +134,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </SQLiteCodeStyleSettings>
     <SqlCodeStyleSettings version="1">
       <option name="myVersion" value="1" />
@@ -106,6 +160,12 @@
       <option name="SET_EL_WRAP" value="2" />
       <option name="SET_ALIGN_EQUAL_SIGN" value="false" />
       <option name="SELECT_ALIGN_AS" value="false" />
+      <option name="TABLE_OPENING" value="1" />
+      <option name="TABLE_CONTENT" value="2" />
+      <option name="TABLE_CLOSING" value="3" />
+      <option name="POST_OPT_WRAP_1" value="true" />
+      <option name="IMP_DECLARE_EL_WRAP" value="1" />
+      <option name="IMP_IF_THEN_WRAP_THEN" value="true" />
     </SybaseCodeStyleSettings>
     <TypeScriptCodeStyleSettings version="0">
       <option name="FORCE_SEMICOLON_STYLE" value="true" />

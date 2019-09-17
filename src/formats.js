@@ -45,8 +45,8 @@ function formatForTerminal(indentMultiline, msg) {
   let message = msg.message;
 
   if (msg.error) {
-    // Show more error info in case of internal server errors
-    const extendedDisplay = !msg.error.code || msg.error.code >= 500;
+    // Show more error info if we are not dealing with a "webby" client error
+    const extendedDisplay = !(msg.error.code >= 400 && msg.error.code < 500);
 
     if (!message) {
       // Replace empty message with error
