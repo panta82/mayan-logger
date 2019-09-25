@@ -215,6 +215,12 @@ class MayanLoggerState {
     this.enabled = undefined;
 
     /**
+     * One of LOGGER_OUTPUTS. Determined what will logger spew out.
+     * @type {string}
+     */
+    this.output = undefined;
+
+    /**
      * Is tracing enabled
      * @type {Boolean}
      */

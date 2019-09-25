@@ -252,6 +252,7 @@ function MayanLogger(options) {
   this.getState = () => {
     return new MayanLoggerState({
       enabled: _enabled,
+      output: options.output,
       level: _level,
       timestamps: !!_makeTimestamp(),
       tracing_enabled: !!(options.tracing && options.tracing.enabled),
