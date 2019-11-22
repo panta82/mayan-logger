@@ -56,6 +56,9 @@ function formatForTerminal(indentMultiline, msg) {
       message += '\n' + msg.error.stack;
     } else if (msg.error.message && !msg.message.includes(msg.error.message)) {
       message += ': ' + msg.error.message;
+    } else {
+      // Make sure we are printing strings, just in case
+      message = String(message);
     }
   }
 
