@@ -48,14 +48,25 @@ function formatForTerminal(indentMultiline, msg) {
     // Show more error info if we are not dealing with a "webby" client error
     const extendedDisplay = !(msg.error.code >= 400 && msg.error.code < 500);
 
+    // From mayan/base CustomError
+    let details = msg.error.errorDetails || '';
+    if (details) {
+      details = '\n' + details;
+    }
+
     if (!message) {
       // Replace empty message with error
-      message = (extendedDisplay && msg.error.stack) || msg.error.message || msg.error;
-    } else if (extendedDisplay && msg.error.stack) {
-      // Print the stack beneath the message
-      message += '\n' + msg.error.stack;
-    } else if (msg.error.message && !msg.message.includes(msg.error.message)) {
-      message += ': ' + msg.error.message;
+      message =
+        ((extendedDisplay && msg.error.stack) || msg.error.message || msg.error || '') + details;
+    } else {
+      // Extend given message
+      if (extendedDisplay && msg.error.stack) {
+        // Print the stack beneath
+        message += details + '\n' + msg.error.stack;
+      } else if (msg.error.message && !msg.message.includes(msg.error.message)) {
+        // Attach error message if we don't already have it
+        message += ': ' + msg.error.message + details;
+      }
     }
   } else {
     // Make sure we are printing strings, just in case
