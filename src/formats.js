@@ -51,7 +51,12 @@ function formatForTerminal(indentMultiline, msg) {
     // From mayan/base CustomError
     let details = msg.error.errorDetails || '';
     if (details) {
-      details = '\n' + details;
+      details =
+        '\n' +
+        details
+          .split(/(\r\n|\n\r|\r|\n)/gm)
+          .map(line => '|> ' + line)
+          .join('\n');
     }
 
     if (!message) {
