@@ -1,14 +1,14 @@
 {
-  "name": "@mayan/logger",
+  "name": "mayan-logger",
   "version": "1.4.1",
-  "description": "Logger for use with xcalibra and related projects",
+  "description": "Node.js logger done right.",
   "main": "index.js",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git@git.mayan.icu:mayan/logger.git"
+    "url": "git@github.com:panta82/mayan-logger.git"
   },
   "devDependencies": {
     "prettier": "^1.18.2",
