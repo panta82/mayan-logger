@@ -1,6 +1,6 @@
 'use strict';
 
-const { MayanLogger, LOG_LEVELS, LOGGER_OUTPUTS } = require('../index');
+const { MayanLogger, LOG_LEVELS, LOGGER_OUTPUTS } = require('../src');
 
 function UserManager(logger) {
   const log = logger.for(UserManager);

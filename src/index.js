@@ -1,6 +1,6 @@
 'use strict';
 
-const { MayanLogger } = require('./src/logger');
+const { MayanLogger } = require('./logger');
 const {
   LOG_LEVEL_ENV,
   LOG_LEVELS,
@@ -10,7 +10,7 @@ const {
   MayanLoggerOptions,
   MayanLoggerState,
   MayanLogCollectorState,
-} = require('./src/types');
+} = require('./types');
 
 /**
  * Default logger, with a few basic options loaded from env

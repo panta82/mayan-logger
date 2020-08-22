@@ -1,6 +1,6 @@
 'use strict';
 
-const { MayanLogger, MayanLoggerOptions, log } = require('../index');
+const { MayanLogger, MayanLoggerOptions, log } = require('../src');
 
 /**
  * @param {MayanLogCollector} log

@@ -1,8 +1,9 @@
 {
   "name": "mayan-logger",
   "version": "1.5.0",
-  "description": "Node.js logger done right.",
-  "main": "index.js",
+  "description": "Javascript logger done right.",
+  "main": "src/index.js",
+  "browser": "dist/mayan-logger.js",
   "keywords": [],
   "author": "",
   "license": "MIT",
@@ -11,16 +12,22 @@
     "url": "git@github.com:panta82/mayan-logger.git"
   },
   "devDependencies": {
+    "@babel/core": "^7.11.4",
+    "@babel/preset-env": "^7.11.0",
     "@types/jest": "^26.0.10",
+    "babel-loader": "^8.1.0",
     "eslint": "^5.15.1",
     "eslint-config-problems": "^1.1.0",
     "jest": "^26.4.2",
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {
     "colorette": "^1.2.1"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack"
   }
 }

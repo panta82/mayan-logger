@@ -1,0 +1,1 @@
+../../dist/mayan-logger.js
