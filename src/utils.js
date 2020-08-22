@@ -93,7 +93,7 @@ function inspectCompact(arg, options = INSPECT_COMPACT_OPTIONS) {
   return libUtil.inspect(arg, options.inspect_options);
 }
 
-function assertKeysMatch(hashToCheck, canonicalHash) {
+function assertSubset(hashToCheck, canonicalHash) {
   for (const key in canonicalHash) {
     if (canonicalHash.hasOwnProperty(key)) {
       assert.ok(key in hashToCheck, 'All required keys must have values');
@@ -105,5 +105,5 @@ module.exports = {
   reverseHash,
   inspectCompact,
   isFunction,
-  assertKeysMatch,
+  assertSubset,
 };

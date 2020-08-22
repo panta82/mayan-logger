@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../index');
+const { MayanLogger, MayanLoggerOptions, log } = require('../index');
 
 /**
  * @param {MayanLogCollector} log
@@ -8,7 +8,8 @@ const logger = require('../index');
 function tryItOut(log) {
   log.trace('Tracing...');
   log.debug('Debugging now');
-  log.verbose('With increased verbosity');
+  log.verbose('With increased verbosity\nMultiline too');
+  console.log('One normal console log');
   for (let i = 0; i < 10; i++) {
     log.info('just some info'.repeat(i));
   }
@@ -16,24 +17,39 @@ function tryItOut(log) {
   log.error('Error !', new Error('some message'));
 }
 
-tryItOut(logger.log);
-
 tryItOut(
-  new logger.MayanLogger({
+  new MayanLogger({
     level: 'trace',
   }).for('')
 );
 
 tryItOut(
-  new logger.MayanLogger({
+  new MayanLogger({
     level: 'trace',
     output: 'json',
   }).for(['Service', 'Worker'])
 );
 
 tryItOut(
-  new logger.MayanLogger({
+  new MayanLogger({
     level: 'debug',
     timestamp: false,
   }).for('Service')
 );
+
+tryItOut(
+  new MayanLogger(
+    new MayanLoggerOptions({
+      level: 'debug',
+      terminal_colors: {
+        timestamp: 'bgYellowBright',
+        tags: 'blue',
+        message: ['bgCyan', 'magenta'],
+        info: ['strikethrough', 'bgGreen'],
+        warn: [],
+      },
+    })
+  ).for('Service')
+);
+
+tryItOut(log);

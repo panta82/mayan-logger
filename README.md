@@ -12,6 +12,7 @@ It has just the right mix of features I found essential during my many years of 
 - Tracing (rudimentary)
 - Can be used with DI or as singleton, depending on the scale of a project
 - Solid JSDoc coverage
+- Customizable colors
 - Minimal dependencies
 
 ### Quick start
@@ -147,6 +148,9 @@ const logger = new Logger({
   - `tag`  
   Tag to add for tracing
 
+- `terminal_colors`  
+  Options for customizing terminal colors. This is an object where keys represent part of the log line to paint (logger levels, `timestamp`, `tags` and `message`), and values are styles from the [colorette](https://www.npmjs.com/package/colorette#supported-styles) library. You can provide a single string style, an array of styles (to be applied in sequence) or `null` (no styling). Default colors are exported as `DEFAULT_TERMINAL_COLORS`, and they can be seen in [types.js](./src/types.js).
+
 ##### Logger API
 
 - `for(...tags)`  
@@ -157,7 +161,7 @@ const logger = new Logger({
   ```
 
 - `getState()`  
-  Returns instance of [MayanLoggerState](./types.js). This contains all the customizable parameters and levels of all collectors. This could be useful for instrumenting logger in a web API.
+  Returns instance of [MayanLoggerState](./src/types.js). This contains all the customizable parameters and levels of all collectors. This could be useful for instrumenting logger in a web API.
 
 - `setLevel(newLevel)`  
   Set log level of the entire logger.
@@ -192,6 +196,12 @@ Collector also has these additional methods:
 
 - `addTracing(target)`  
   Wrap each method on a given object with a tracing wrapper
+
+### Change log
+
+##### 1.5.0
+
+- Exposed `terminal_colors` as an option for customizing colors.
 
 ### License
 

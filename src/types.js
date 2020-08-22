@@ -1,6 +1,6 @@
 'use strict';
 
-const { reverseHash, assertKeysMatch } = require('./utils');
+const { reverseHash, assertSubset } = require('./utils');
 
 // *********************************************************************************************************************
 
@@ -32,9 +32,24 @@ const LOG_LEVEL_VALUES = {
   debug: 4,
   trace: 5,
 };
-assertKeysMatch(LOG_LEVEL_VALUES, LOG_LEVELS);
+assertSubset(LOG_LEVEL_VALUES, LOG_LEVELS);
 
 const LOG_LEVEL_VALUES_TO_LEVELS = reverseHash(LOG_LEVEL_VALUES);
+
+const DEFAULT_TERMINAL_COLORS = /** @lends MayanLoggerTerminalColorOptions.prototype */ {
+  silent: null,
+  error: ['red', 'bold'],
+  warn: ['yellow', 'bold'],
+  info: 'green',
+  verbose: 'cyan',
+  debug: 'blueBright',
+  trace: 'gray',
+
+  timestamp: 'gray',
+  tags: 'white',
+  message: null,
+};
+assertSubset(DEFAULT_TERMINAL_COLORS, LOG_LEVELS);
 
 class MayanLoggerOptions {
   constructor(/** MayanLoggerOptions */ source) {
@@ -103,6 +118,22 @@ class MayanLoggerOptions {
       tag: 'trace',
     };
 
+    /**
+     * Colors to use when outputting to terminal. Each value should be one of or an array of colorette style names
+     * (https://www.npmjs.com/package/colorette#supported-styles)
+     *    black	bgBlack	blackBright	bgBlackBright	dim
+     *    red	bgRed	redBright	bgRedBright	bold
+     *    green	bgGreen	greenBright	bgGreenBright	hidden
+     *    yellow	bgYellow	yellowBright	bgYellowBright	italic
+     *    blue	bgBlue	blueBright	bgBlueBright	underline
+     *    magenta	bgMagenta	magentaBright	bgMagentaBright	strikethrough
+     *    cyan	bgCyan	cyanBright	bgCyanBright	reset
+     *    white	bgWhite	whiteBright	bgWhiteBright
+     *  Defaults to DEFAULT_TERMINAL_COLORS
+     *  @type {MayanLoggerTerminalColorOptions}
+     */
+    this.terminal_colors = null;
+
     this.assign(source);
   }
 
@@ -113,6 +144,10 @@ class MayanLoggerOptions {
       tracing: {
         ...this.tracing,
         ...source.tracing,
+      },
+      terminal_colors: {
+        ...DEFAULT_TERMINAL_COLORS,
+        ...source.terminal_colors,
       },
     });
 
@@ -257,7 +292,9 @@ class MayanLoggerError extends Error {
   }
 }
 
-class InvalidLogLevelError extends MayanLoggerError {
+class MayanLoggerOptionsError extends MayanLoggerError {}
+
+class InvalidLogLevelError extends MayanLoggerOptionsError {
   constructor(level, code = 400) {
     super(`Invalid log level: ${level}`, code);
   }
@@ -271,6 +308,7 @@ module.exports = {
   LOG_LEVELS,
   LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
+  DEFAULT_TERMINAL_COLORS,
 
   MayanLoggerOptions,
   MayanLogCollectorState,
@@ -278,5 +316,6 @@ module.exports = {
   MayanLoggerState,
 
   MayanLoggerError,
+  MayanLoggerOptionsError,
   InvalidLogLevelError,
 };

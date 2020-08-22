@@ -6,6 +6,7 @@ const {
   LOG_LEVELS,
   LOG_LEVEL_VALUES,
   LOGGER_OUTPUTS,
+  DEFAULT_TERMINAL_COLORS,
   MayanLoggerOptions,
   MayanLoggerState,
   MayanLogCollectorState,
@@ -33,6 +34,7 @@ module.exports.LOG_LEVEL_ENV = LOG_LEVEL_ENV;
 module.exports.LOG_LEVELS = LOG_LEVELS;
 module.exports.LOG_LEVEL_VALUES = LOG_LEVEL_VALUES;
 module.exports.LOGGER_OUTPUTS = LOGGER_OUTPUTS;
+module.exports.DEFAULT_TERMINAL_COLORS = DEFAULT_TERMINAL_COLORS;
 
 module.exports.MayanLogger = MayanLogger;
 module.exports.MayanLoggerOptions = MayanLoggerOptions;

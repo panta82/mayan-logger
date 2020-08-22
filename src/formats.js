@@ -1,45 +1,107 @@
 'use strict';
 
-const chalk = require('chalk');
+const { assertSubset } = require('./utils');
+const {
+  LOG_LEVELS,
+  LOGGER_OUTPUTS,
+  MayanLoggerOptionsError,
+  DEFAULT_TERMINAL_COLORS,
+} = require('./types');
 
-const { assertKeysMatch } = require('./utils');
-const { LOG_LEVELS, LOGGER_OUTPUTS, MayanLoggerError } = require('./types');
-
-const LOG_LEVEL_COLORS = {
-  silent: str => str,
-  error: chalk.red.bold,
-  warn: chalk.yellow.bold,
-  info: chalk.green,
-  verbose: chalk.cyan,
-  debug: chalk.blueBright,
-  trace: chalk.gray,
-};
-assertKeysMatch(LOG_LEVEL_COLORS, LOG_LEVELS);
+// *********************************************************************************************************************
 
 // Pad all level strings by this much, so things will align
 const levelPadding = Object.keys(LOG_LEVELS).reduce((max, level) => Math.max(max, level.length), 0);
 
+class TerminalPainter {
+  /**
+   * @param {MayanLoggerTerminalColorOptions} terminalColors
+   */
+  constructor(terminalColors) {
+    // Only needs this if we are formatting for terminal
+    const colorette = require('colorette');
+
+    terminalColors = terminalColors || DEFAULT_TERMINAL_COLORS;
+
+    this.silent = makeColorFn('silent');
+    this.error = makeColorFn('error');
+    this.warn = makeColorFn('warn');
+    this.info = makeColorFn('info');
+    this.verbose = makeColorFn('verbose');
+    this.debug = makeColorFn('debug');
+    this.trace = makeColorFn('trace');
+
+    this.timestamp = makeColorFn('timestamp');
+    this.tags = makeColorFn('tags');
+    this.message = makeColorFn('message');
+
+    assertSubset(this, DEFAULT_TERMINAL_COLORS);
+
+    /**
+     * @param name
+     * @return {function(string): string}
+     */
+    function makeColorFn(name) {
+      let spec = terminalColors[name];
+      if (!spec) {
+        // Don't use any formatting
+        return str => str;
+      }
+
+      if (typeof spec === 'string') {
+        spec = [spec];
+      }
+      if (!Array.isArray(spec)) {
+        throw new MayanLoggerOptionsError(
+          `Specs must be arrays or strings, but "${name}" was instead given: ${JSON.stringify(
+            spec
+          )}`
+        );
+      }
+
+      const fns = spec.map(fnName => {
+        const fn = colorette[fnName];
+        if (!fn) {
+          throw new MayanLoggerOptionsError(
+            `Terminal color style "${fnName}" for spec "${name}" is not valid. See the documentation for the list of valid style names`
+          );
+        }
+        return fn;
+      });
+      const fnCount = fns.length;
+
+      return str => {
+        for (let i = fnCount - 1; i >= 0; i--) {
+          str = fns[i](str);
+        }
+        return str;
+      };
+    }
+  }
+}
+
 /**
  * Format info into a string suitable for writing to terminal
  * @param {boolean} indentMultiline
+ * @param {TerminalPainter} painter
  * @param {MayanLoggerMessage} msg
  */
-function formatForTerminal(indentMultiline, msg) {
+function formatForTerminal(indentMultiline, painter, msg) {
   let prefixLength = 0;
   const parts = [];
   if (msg.timestamp) {
     const timestampStr = msg.timestamp.toISOString();
-    parts.push(chalk.gray(timestampStr));
+    parts.push(painter.timestamp(timestampStr));
     prefixLength += timestampStr.length;
   }
 
   const levelStr = msg.level.padStart(levelPadding) + ':';
   prefixLength += levelStr.length;
-  parts.push(LOG_LEVEL_COLORS[msg.level](levelStr));
+  parts.push(painter[msg.level](levelStr));
 
   if (msg.collector.tagString) {
     prefixLength += msg.collector.tagString.length;
-    parts.push(chalk.white(msg.collector.tagString));
+    parts.push(painter.tags(msg.collector.tagString));
   }
 
   let message = msg.message;
@@ -84,10 +146,12 @@ function formatForTerminal(indentMultiline, msg) {
     message = message.replace(/(\r\n|\n\r|\r|\n)/gm, '$1' + indent);
   }
 
-  parts.push(message);
+  parts.push(painter.message(message));
 
   return parts.join(' ');
 }
+
+// *********************************************************************************************************************
 
 /**
  * Format info into a JSON string
@@ -117,23 +181,32 @@ function formatAsJSON(msg) {
   return JSON.stringify(payload);
 }
 
+// *********************************************************************************************************************
+
 /**
  * @param {MayanLoggerOptions} options
  */
 function makeFormatter(options) {
   switch (options.output) {
     case LOGGER_OUTPUTS.terminal:
-      return formatForTerminal.bind(null, options.indent_multiline);
+      return formatForTerminal.bind(
+        null,
+        options.indent_multiline,
+        new TerminalPainter(options.terminal_colors)
+      );
     case LOGGER_OUTPUTS.json:
       return formatAsJSON;
   }
 
-  throw new MayanLoggerError(
+  throw new MayanLoggerOptionsError(
     `Invalid output "${options.output}". Must be either "${LOGGER_OUTPUTS.terminal}" or "${LOGGER_OUTPUTS.json}"`
   );
 }
 
+// *********************************************************************************************************************
+
 module.exports = {
+  TerminalPainter,
   formatForTerminal,
   formatAsJSON,
   makeFormatter,
