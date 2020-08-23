@@ -1,6 +1,7 @@
 'use strict';
 
 const libPath = require('path');
+const webpack = require('webpack');
 
 module.exports = {
   entry: './src/index.js',
@@ -16,5 +17,10 @@ module.exports = {
   module: {
     rules: [{ test: /\.js$/, loader: 'babel-loader' }],
   },
+  plugins: [
+    new webpack.DefinePlugin({
+      MAYAN_LOGGER_BROWSER_BUILD: 'true',
+    }),
+  ],
   externals: ['colorette'],
 };

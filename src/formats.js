@@ -2,6 +2,7 @@
 
 const { assertSubset } = require('./utils');
 const {
+  IS_BROWSER_BUILD,
   LOG_LEVELS,
   LOGGER_OUTPUTS,
   MayanLoggerOptionsError,
@@ -18,8 +19,11 @@ class TerminalPainter {
    * @param {MayanLoggerTerminalColorOptions} terminalColors
    */
   constructor(terminalColors) {
-    // Only needs this if we are formatting for terminal
-    const colorette = require('colorette');
+    // Only needs this if we are formatting for terminal and we are not in browser
+    let colorette;
+    if (!IS_BROWSER_BUILD) {
+      colorette = require('colorette');
+    }
 
     terminalColors = terminalColors || DEFAULT_TERMINAL_COLORS;
 
@@ -42,6 +46,11 @@ class TerminalPainter {
      * @return {function(string): string}
      */
     function makeColorFn(name) {
+      if (!colorette) {
+        // Can't apply styles
+        return str => str;
+      }
+
       let spec = terminalColors[name];
       if (!spec) {
         // Don't use any formatting

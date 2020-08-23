@@ -4,6 +4,14 @@ const { reverseHash, assertSubset } = require('./utils');
 
 // *********************************************************************************************************************
 
+/**
+ * This will be set to true by webpack in browser builds. It will determine some defaults and shim some modules
+ * @type {boolean}
+ */
+const IS_BROWSER_BUILD = process.env.MAYAN_LOGGER_BROWSER_BUILD || false;
+
+// *********************************************************************************************************************
+
 const LOG_LEVEL_ENV = 'LOG_LEVEL';
 
 const LOG_LEVELS = {
@@ -303,6 +311,8 @@ class InvalidLogLevelError extends MayanLoggerOptionsError {
 // *********************************************************************************************************************
 
 module.exports = {
+  IS_BROWSER_BUILD,
+  
   LOG_LEVEL_ENV,
 
   LOG_LEVELS,
