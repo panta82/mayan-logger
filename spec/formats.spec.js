@@ -1,7 +1,7 @@
 'use strict';
 
 const { DEFAULT_TERMINAL_COLORS } = require('../src/types');
-const { formatForTerminal, TerminalPainter } = require('../src/formats');
+const { formatForTerminal, TerminalPainter } = require('../src/outputs');
 
 describe('formats', () => {
   const msg = (/** MayanLoggerMessage */ partialMsg = {}) => {

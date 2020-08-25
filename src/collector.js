@@ -25,8 +25,8 @@ function MayanLogCollector(state, logger) {
   const _untracedMethods = new WeakSet();
 
   const makeLogMethod = level => {
-    const logMethod = (message, ...args) => {
-      return logger._log(this.state, level, message, ...args);
+    const logMethod = (message, data) => {
+      return logger._log(this.state, level, message, data);
     };
 
     Object.defineProperty(logMethod, 'on', {
@@ -38,42 +38,42 @@ function MayanLogCollector(state, logger) {
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.error = makeLogMethod(LOG_LEVELS.error);
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.warn = makeLogMethod(LOG_LEVELS.warn);
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.info = makeLogMethod(LOG_LEVELS.info);
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.verbose = makeLogMethod(LOG_LEVELS.verbose);
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.debug = makeLogMethod(LOG_LEVELS.debug);
 
   /**
    * @param {string} message
-   * @param {...*} args
+   * @param {Object} data?
    * @property {boolean} on
    */
   this.trace = makeLogMethod(LOG_LEVELS.trace);

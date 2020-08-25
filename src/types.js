@@ -24,8 +24,8 @@ const LOG_LEVELS = {
   trace: 'trace',
 };
 
-const LOGGER_OUTPUTS = {
-  terminal: 'terminal',
+const LOGGER_FORMATS = {
+  human: 'human',
   json: 'json',
 };
 
@@ -74,10 +74,12 @@ class MayanLoggerOptions {
     this.enabled = true;
 
     /**
-     * One of LOGGER_OUTPUTS. Determined what will logger spew out.
+     * One of LOGGER_FORMATS. Determines the kind of stuff logger will print out.
+     * It defaults to "human", which will print human-readable strings, suitable for development.
+     * It is recommended to use "json" in production, depending on your logging infrastructure.
      * @type {string}
      */
-    this.output = LOGGER_OUTPUTS.terminal;
+    this.format = LOGGER_FORMATS.human;
 
     /**
      * Lookup of collector initial levels, by collector key.
@@ -142,6 +144,13 @@ class MayanLoggerOptions {
      */
     this.terminal_colors = null;
 
+    /**
+     * Javascript Console instance. Can be used to inject something for testing, or provide a custom shim.
+     * Defaults to global.console in node.js and window.console in the browser.
+     * @type {Console}
+     */
+    this.console = undefined;
+
     this.assign(source);
   }
 
@@ -159,18 +168,14 @@ class MayanLoggerOptions {
       },
     });
 
-    if (!LOG_LEVELS[this.level]) {
-      throw new InvalidLogLevelError(this.level, 500);
-    }
-    if (!LOGGER_OUTPUTS[this.output]) {
-      throw new MayanLoggerError(`Invalid logger output: ${this.output}`);
-    }
+    InvalidLogLevelError.assert(this.level);
+    InvalidLoggerFormatError.assert(this.format);
   }
 
   static fromEnv(env = {}) {
     return new this({
       level: env[LOG_LEVEL_ENV],
-      output: env.NODE_ENV === 'production' ? LOGGER_OUTPUTS.json : LOGGER_OUTPUTS.terminal,
+      format: env.NODE_ENV === 'production' ? LOGGER_FORMATS.json : LOGGER_FORMATS.human,
     });
   }
 }
@@ -236,8 +241,8 @@ class MayanLoggerMessage {
     /** @type {Error} */
     this.error = error;
 
-    /** @type {Array} */
-    this.data = data && data.length ? data : undefined;
+    /** @type {*} */
+    this.data = data;
 
     /** @type {Date} */
     this.timestamp = timestamp;
@@ -303,8 +308,30 @@ class MayanLoggerError extends Error {
 class MayanLoggerOptionsError extends MayanLoggerError {}
 
 class InvalidLogLevelError extends MayanLoggerOptionsError {
-  constructor(level, code = 400) {
-    super(`Invalid log level: ${level}`, code);
+  constructor(level) {
+    super(`Invalid log level: ${level}`, 400);
+  }
+
+  static assert(level) {
+    if (!LOG_LEVELS[level]) {
+      throw new InvalidLogLevelError(level);
+    }
+  }
+}
+
+class InvalidLoggerFormatError extends MayanLoggerOptionsError {
+  constructor(format) {
+    super(
+      `Invalid logger format: "${format}". It must be either "${LOGGER_FORMATS.human}" or "${LOGGER_FORMATS.json}"`,
+      400
+    );
+    this.format = format;
+  }
+
+  static assert(format) {
+    if (!LOGGER_FORMATS[format]) {
+      throw new InvalidLoggerFormatError(format);
+    }
   }
 }
 
@@ -312,12 +339,12 @@ class InvalidLogLevelError extends MayanLoggerOptionsError {
 
 module.exports = {
   IS_BROWSER_BUILD,
-  
+
   LOG_LEVEL_ENV,
 
   LOG_LEVELS,
   LOG_LEVEL_VALUES,
-  LOGGER_OUTPUTS,
+  LOGGER_FORMATS,
   DEFAULT_TERMINAL_COLORS,
 
   MayanLoggerOptions,
@@ -328,4 +355,5 @@ module.exports = {
   MayanLoggerError,
   MayanLoggerOptionsError,
   InvalidLogLevelError,
+  InvalidLoggerFormatError,
 };

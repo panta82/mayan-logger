@@ -12,8 +12,8 @@ const {
 } = require('./types');
 const { inspectCompact, isFunction } = require('./utils');
 const { MayanLogCollector } = require('./collector');
-const { makeFormatter } = require('./formats');
-const { makeConsoleWriter } = require('./writers');
+const { createConsoleInterface } = require('./console_interface');
+const { makeOutput } = require('./outputs/outputs');
 
 /**
  * Master logger coordinator. Can create log interfaces for individual services, attach tracing...
@@ -55,17 +55,17 @@ function MayanLogger(options) {
   const _collectors = {};
 
   /**
-   * Formatter will take a MayanLoggerMessage instance and produce a string that can be fed to writer
-   * @type {function(MayanLoggerMessage)}
+   * Wrapper around console. We will use this to write messages.
+   * @type {MayanLoggerConsoleInterface}
    */
-  this._formatMessage = makeFormatter(options);
-
+  this._console = createConsoleInterface(options);
+  
   /**
-   * Writer will actually write the message to stdout or stderr
-   * @type {loggerWriter}
+   * Output which will be used to output messages
+   * @type {mayanLoggerOutput}
    */
-  this._writeMessage = makeConsoleWriter();
-
+  this._output = makeOutput(options, this._console);
+  
   /**
    * Returns true if we should log at given level
    * @param {MayanLogCollectorState} collector Logging collector that is submitting a log
@@ -88,9 +88,9 @@ function MayanLogger(options) {
    * @param {MayanLogCollectorState} collector Logging collector that is submitting this log
    * @param level Level at which this should be logged
    * @param message
-   * @param args
+   * @param {Object} data?
    */
-  this._log = function(collector, level, message, ...args) {
+  this._log = function(collector, level, message, data = undefined) {
     let isTrace = false;
     if (level === LOG_LEVELS.trace) {
       isTrace = true;
@@ -114,9 +114,9 @@ function MayanLogger(options) {
 
     // User did something like log.error(`Couldn't do X`, err);
     // Extract error from data
-    if (!error && args && args[0] instanceof Error) {
-      error = args[0];
-      args = args.slice(1);
+    if (!error && data && data instanceof Error) {
+      error = data;
+      data = null;
     }
 
     if (error) {
@@ -132,7 +132,7 @@ function MayanLogger(options) {
       level,
       message,
       error,
-      args,
+      data,
       _makeTimestamp(),
       isTrace
     );
@@ -151,8 +151,8 @@ function MayanLogger(options) {
     }
 
     // Write it out
-    const txtMessage = this._formatMessage(msg);
-    this._writeMessage(msg.level, txtMessage);
+    const formattedMessage = this._formatMessage(msg);
+    this._writeMessage(msg, formattedMessage);
   };
 
   /**
